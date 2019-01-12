@@ -1,0 +1,1 @@
+export const XML_URL = 'https://water.weather.gov/ahps2/hydrograph_to_xml.php?gage=bryn6&output=xml';
