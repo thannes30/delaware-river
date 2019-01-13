@@ -3,7 +3,6 @@ import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'rec
 
 class BarChart extends Component {
 
-
 		render() {
 
 			const data = this.props.data;

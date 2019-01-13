@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import BarChart from './BarChart';
-import Title from './Title';
+import BarChart from './components/BarChart';
+import Title from './components/Title';
+import FloodInfo from './components/FloodInfo';
 import {XML_URL} from './constants';
 import {formatDate} from './lib/utils'
 import xml2js from 'xml2js';
@@ -12,14 +13,13 @@ class App extends Component {
     super(props);
 
     this.state = {
-      width: 1200,
-      height: 500,
-      id: 'chart',
+      width: window.innerWidth - 40,
+      height: 400,
       title: '',
       warning: '',
       chartData: [],
       isLoading: false,
-      floodInfo: {},
+      floodInfo: [],
       data: []
     };
 
@@ -27,9 +27,10 @@ class App extends Component {
 
   _applyData = (result) => {
     let data = result;
-    let len = data.site.observed[0].datum.length;
     let newChartData = [];
-    for (let i = 0; i < len; i++) {
+
+    let observedLen = data.site.observed[0].datum.length;
+    for (let i = 0; i < observedLen; i++) {
       var obj = {};
       obj['date'] = formatDate(data.site.observed[0].datum[i].valid[0]['_']);
       obj['waterHeight'] = data.site.observed[0].datum[i].primary[0]['_'];
@@ -37,12 +38,23 @@ class App extends Component {
       newChartData.push(obj);
     }
 
+    // let forecastLen = data.site.forecast[0].datum.length;
+    // for (let j = 0; j < forecastLen; j++) {
+    //   var obj = {};
+    //   obj['date'] = formatDate(data.site.observed[0].datum[j].valid[0]['_']);
+    //   obj['waterHeight'] = data.site.observed[0].datum[j].primary[0]['_'];
+    //   obj['flowSpeed'] = data.site.observed[0].datum[j].secondary[0]['_'];
+    //   newChartData.push(obj);
+    // }
+
+    newChartData.reverse();
+
     console.log(newChartData);
 
     this.setState({
       isLoading: false,
       title: data.site.$.name,
-      warning: data.site.standing,
+      warning: data.site.disclaimers[0].standing[0]['_'],
       data: newChartData,
       floodInfo: {
         action: {
@@ -51,12 +63,28 @@ class App extends Component {
         },
         bankfull: {
           unit: data.site.sigstages[0].bankfull[0]['$'].units,
+          amount: data.site.sigstages[0].bankfull[0]['_']
         },
-        flood: data.site.sigstages[0].flood,
-        low: data.site.sigstages[0].low,
-        major: data.site.sigstages[0].major,
-        moderate: data.site.sigstages[0].moderate,
-        record: data.site.sigstages[0].record
+        flood: {
+          unit: data.site.sigstages[0].flood[0]['$'].units,
+          amount: data.site.sigstages[0].flood[0]['_']
+        },
+        low: {
+          unit: data.site.sigstages[0].low[0]['$'].units,
+          amount: data.site.sigstages[0].low[0]['_']
+        },
+        major: {
+          unit: data.site.sigstages[0].major[0]['$'].units,
+          amount: data.site.sigstages[0].major[0]['_']
+        },
+        moderate: {
+          unit: data.site.sigstages[0].moderate[0]['$'].units,
+          amount: data.site.sigstages[0].moderate[0]['_']
+        },
+        record: {
+          unit: data.site.sigstages[0].record[0]['$'].units,
+          amount: data.site.sigstages[0].record[0]['_']
+        }
       }
     });
 
@@ -85,11 +113,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+
       { this.state.title &&
         <Title title={this.state.title} warning={this.state.warning} />
       }
+      { this.state.floodInfo &&
+        <FloodInfo floodInfo={this.state.floodInfo} />
+      }
       { this.state.chartData &&
-        <BarChart data={this.state.data} width={this.state.width} height={this.state.height} id={this.state.id} />
+        <BarChart data={this.state.data} width={this.state.width} height={this.state.height} />
       }
       </div>
     );
