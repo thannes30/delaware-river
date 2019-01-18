@@ -8,9 +8,10 @@ class Header extends Component {
       <div className="header">
         <div>
           <Link to="/">Map</Link>
-          <Link to="/callicoon">Callicoon</Link>
-          <Link to="/barryville">Barryville</Link>
-          <Link to="/portjervis">Port Jervis</Link>
+          <Link to="/haleeddy">Hale Eddy, NY</Link>
+          <Link to="/callicoon">Callicoon, NY</Link>
+          <Link to="/barryville">Barryville, NY</Link>
+          <Link to="/portjervis">Port Jervis, NY</Link>
           <Link to="/montague">Montague, NJ</Link>
         </div>
       </div>
