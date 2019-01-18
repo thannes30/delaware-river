@@ -1,28 +1,33 @@
 import React, { Component } from 'react';
-import './App.css';
-import BarChart from './components/BarChart';
-import Title from './components/Title';
-import FloodInfo from './components/FloodInfo';
-import {XML_URL} from './constants';
-import {formatDate} from './lib/utils'
+import '../App.css';
+import BarChart from './BarChart';
+import Title from './Title';
+import FloodInfo from './FloodInfo';
+import * as XML_URLs from '../constants';
+import {formatDate} from '../lib/utils'
 import xml2js from 'xml2js';
 
-class App extends Component {
+class RiverConditions extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
+      location: window.location.pathname.replace(/\//g,''),
       width: window.innerWidth - 40,
       height: 400,
       title: '',
       warning: '',
       chartData: [],
-      isLoading: false,
       floodInfo: [],
       data: []
     };
 
+  }
+
+  getDerivedStateFromProps(props, state) {
+    console.log(props);
+    console.log(state);
   }
 
   _applyData = (result) => {
@@ -52,7 +57,6 @@ class App extends Component {
     console.log(newChartData);
 
     this.setState({
-      isLoading: false,
       title: data.site.$.name,
       warning: data.site.disclaimers[0].standing[0]['_'],
       data: newChartData,
@@ -88,13 +92,10 @@ class App extends Component {
       }
     });
 
-    // console.log(data.site.sigstages[0]);
-
   }
 
   _getData = (url) => {
     console.log(url);
-    this.setState({ isLoading: true });
     var self = this;
     fetch(url).then(response => {
       response.text().then(xmlText => {
@@ -106,26 +107,48 @@ class App extends Component {
     })
   }
 
+  componentDidUpdate(prev) {
+    console.log('componentDidUpdate');
+    const newLocation = this.props.match.params.place;
+    console.log(newLocation);
+
+    if (newLocation === undefined || newLocation === prev.match.params.place) {
+      return false;
+    }
+
+    if (newLocation !== this.state.location) {
+      console.log(newLocation + ' !== ' + this.state.location);
+      const locationURL = XML_URLs[newLocation];
+      console.log(locationURL);
+      this._getData(locationURL);
+    }
+  }
+
   componentDidMount() {
-    this._getData(XML_URL);
+    console.log('componentDidMount');
+    console.log('>> props', this.props);
+    const location = this.props.match.params.place;
+    this.setState({ location: location });
+    const locationURL = XML_URLs[location];
+    console.log(locationURL);
+    this._getData(locationURL);
   }
 
   render() {
     return (
-      <div className="App">
-
-      { this.state.title &&
-        <Title title={this.state.title} warning={this.state.warning} />
-      }
-      { this.state.floodInfo &&
-        <FloodInfo floodInfo={this.state.floodInfo} />
-      }
-      { this.state.chartData &&
-        <BarChart data={this.state.data} width={this.state.width} height={this.state.height} />
-      }
+      <div className="conditions-wrapper">
+        { this.state.title &&
+          <Title title={this.state.title} warning={this.state.warning} />
+        }
+        { this.state.floodInfo &&
+          <FloodInfo floodInfo={this.state.floodInfo} />
+        }
+        { this.state.chartData &&
+          <BarChart data={this.state.data} width={this.state.width} height={this.state.height} />
+        }
       </div>
     );
   }
 }
 
-export default App;
+export default RiverConditions;

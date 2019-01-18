@@ -11,7 +11,7 @@ class List extends Component {
 		return (
 			<ul>
 				{Object.keys(listObject).map((key, index) =>
-				  <li key={index}>{key}: {listObject[key].amount}{listObject[key].unit}</li>
+				  <li key={index}><b>{key}</b>: {listObject[key].amount} {listObject[key].unit}</li>
 				)}
 			</ul>
 		)
