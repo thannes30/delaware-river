@@ -21,8 +21,8 @@ class BarChart extends Component {
 	    	<AreaChart width={this.props.width} height={this.props.height} data={data}
 	            margin={{top: 20, right: 20, left: 20, bottom: 20}}>
 	        <CartesianGrid strokeDasharray="3 3"/>
-	        <XAxis dataKey="date"/>
 	        <YAxis/>
+	        <XAxis dataKey="date"/>
 	        <Tooltip/>
 	        <Legend verticalAlign="top" height={50} />
 	        <Area name="Water Level" type='monotone' dataKey='waterHeight' stackId="1" stroke='blue' unit=" Ft" fill='blue' />
