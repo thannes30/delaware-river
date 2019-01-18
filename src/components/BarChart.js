@@ -36,6 +36,7 @@ class BarChart extends Component {
 	        <XAxis dataKey="date"/>
 	        <YAxis/>
 	        <Tooltip/>
+	        <Legend verticalAlign="top" height={50} />
 	        <Area name='Water Level' type='monotone' dataKey='waterHeight' stroke='blue' fill='blue' fillOpacity={0.3}/>
 	        <Area name='Flow Speed' type='monotone' dataKey='flowSpeed' stroke='black' fill='black' fillOpacity={0.3}/>
 	      </AreaChart>
