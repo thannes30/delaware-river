@@ -1,61 +1,92 @@
-import React, {Component} from 'react';
-import GoogleMapReact from 'google-map-react';
+import React, { Component } from 'react'
+import { Map, Marker, GoogleApiWrapper } from 'google-maps-react'
+import { Redirect } from 'react-router-dom'
 
-class LocationsMap extends Component {
+export class MapContainer extends Component {
 
-	state = {
-		clickedMarker: false,
-		center: {
-	    	lat: 41.47,
-	    	lng: -74.91
-	    },
-	    zoom: 8
+  constructor(props) {
+    super(props);
+    this.state = {
+			clickedMarker: false,
+			redirect: false,
+			redirectLocation: '',
+			center: {
+	  		lat: 41.47,
+	  		lng: -74.91
+	  	},
+	    zoom: 8,
+			locations: {
+				haleeddy: {
+					name: 'Hale Eddy, NY',
+					route: '/haleeddy',
+					lat: 42.00,
+					lng: -75.38
+				},
+				callicoon: {
+					name: 'Callicoon, NY',
+					route: '/callicoon',
+					lat: 41.76,
+					lng: -75.05
+				},
+				barryville: {
+					name: 'Barryville, NY',
+					route: '/barryville',
+					lat: 41.47,
+					lng: -74.91
+				},
+				portjervis: {
+					name: 'Port Jervis, NY',
+					route: '/portjervis',
+					lat: 41.37,
+					lng: -74.69
+				},
+				montague: {
+					name: 'Montague, NJ',
+					route: '/montague',
+					lat: 41.29,
+					lng: -74.78
+				}
+	  	}
+	  }
 	}
 
-
-  	renderMarkers(map, maps) {
-  		const locations = [
-  			['Hale Eddy, NY', 'haleeddy', 42.00, -75.38],
-  			['Callicoon, NY', 'callicoon', 41.76, -75.05],
-  			['Barryville, NY', 'barryville', 41.47, -74.91],
-  			['Port Jervis, NY', 'portjervis', 41.37, -74.69],
-  			['Montague, NJ', 'montague', 41.29, -74.78]
-  		];
-  		for (let i = 0; i < locations.length; i++) {
-		  	let marker = new maps.Marker({
-		    	position: {lat: locations[i][2], lng: locations[i][3]},
-		    	title: locations[i][0],
-		    	route: locations[i][1],
-		    	map
-		  	});
-		  	maps.event.addListener(marker, 'click', function() {console.log(this.props)});
-  		}
-	};
-	
-	render() {
-
-  		const locations = [
-  			['Hale Eddy, NY', 'haleeddy', 42.00, -75.38],
-  			['Callicoon, NY', 'callicoon', 41.76, -75.05],
-  			['Barryville, NY', 'barryville', 41.47, -74.91],
-  			['Port Jervis, NY', 'portjervis', 41.37, -74.69],
-  			['Montague, NJ', 'montague', 41.29, -74.78]
-  		];
-
-		return (
-
-		    <div style={{ height: '80vh', width: '80%', margin: '10vh auto' }}>
-		        <GoogleMapReact
-		          bootstrapURLKeys={{ key: 'AIzaSyDKTCb6IG3kANo7FMadb5q_msrPbvsaDOw' }}
-		          defaultCenter={this.state.center}
-		          defaultZoom={this.state.zoom}
-		          onGoogleApiLoaded ={({map, maps}) => this.renderMarkers(map, maps)}
-		        >
-		        </GoogleMapReact>
-		    </div>
-		)
+	onMarkerClick = (route) => {
+		console.log('route >>> ', route);
+		this.setState({ redirectLocation: route })
+		this.setState({ redirect: true });
 	}
 
+  render() {
+
+  	if (this.state.redirect === true) {
+  		return <Redirect to={this.state.redirectLocation} />
+  	}
+
+  	const locations = this.state.locations;
+  	const Markers = Object.keys(locations).map(key => 
+  		<Marker
+        onClick={() => { this.onMarkerClick(locations[key].route)}}
+        position={{lat: locations[key].lat, lng: locations[key].lng}}
+        name={locations[key].name}
+			/>
+  	)
+
+    return (
+      <div
+        style={{
+          position: "relative",
+          height: "calc(100vh - 200px)",
+          width: "100%"
+        }}
+      >
+        <Map google={this.props.google} zoom={8} initialCenter={{lat: this.state.locations.portjervis.lat, lng: this.state.locations.portjervis.lng}}>
+					{Markers}
+        </Map>
+      </div>
+    );
+  }
 }
 
-export default LocationsMap;
+export default GoogleApiWrapper({
+  apiKey: ('AIzaSyDKTCb6IG3kANo7FMadb5q_msrPbvsaDOw')
+})(MapContainer)

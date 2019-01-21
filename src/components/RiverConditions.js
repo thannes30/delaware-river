@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import '../App.css';
-import BarChart from './BarChart';
-import Title from './Title';
-import FloodInfo from './FloodInfo';
-import * as XML_URLs from '../constants';
+import React, { Component } from 'react'
+import '../App.css'
+import BarChart from './BarChart'
+import Title from './Title'
+import FloodInfo from './FloodInfo'
+import * as XML_URLs from '../constants'
 import {formatDate} from '../lib/utils'
-import xml2js from 'xml2js';
+import xml2js from 'xml2js'
+import { Link } from 'react-router-dom'
 
 class RiverConditions extends Component {
 
@@ -110,16 +111,16 @@ class RiverConditions extends Component {
   componentDidUpdate(prev) {
     console.log('componentDidUpdate');
     const newLocation = this.props.match.params.place;
-    console.log(newLocation);
+    // console.log(newLocation);
 
     if (newLocation === undefined || newLocation === prev.match.params.place) {
       return false;
     }
 
     if (newLocation !== this.state.location) {
-      console.log(newLocation + ' !== ' + this.state.location);
+      // console.log(newLocation + ' !== ' + this.state.location);
       const locationURL = XML_URLs[newLocation];
-      console.log(locationURL);
+      // console.log(locationURL);
       this._getData(locationURL);
     }
   }
@@ -137,6 +138,7 @@ class RiverConditions extends Component {
   render() {
     return (
       <div className="conditions-wrapper">
+        <Link to="/">Back to Map</Link>
         { this.state.title &&
           <Title title={this.state.title} warning={this.state.warning} />
         }
