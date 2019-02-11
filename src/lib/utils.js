@@ -22,8 +22,11 @@ export const xmlToJson = (xmlString) => {
 
 // expects this -> "2019-01-11T21:45:00-00:00"
 export const formatDate = (rawDate) => {
+  console.log(rawDate);
   var dateTime = rawDate.split('T');
   var date = dateTime[0].split('-');
   var time = dateTime[1].split(':');
-  return time[0] + ':' + time[1] + ' - ' + date[1] + '/' + date[2] + '/' + date[0];
+  var formattedTime = time[0] + ':' + time[1] + ' - ' + date[1] + '/' + date[2] + '/' + date[0]
+  console.log(formattedTime);
+  return formattedTime;
 }
