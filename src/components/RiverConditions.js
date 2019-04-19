@@ -26,11 +26,6 @@ class RiverConditions extends Component {
 
   }
 
-  getDerivedStateFromProps(props, state) {
-    console.log(props);
-    console.log(state);
-  }
-
   _applyData = (result) => {
     let data = result;
     let newChartData = [];

@@ -63,12 +63,13 @@ export class MapContainer extends Component {
   	}
 
   	const locations = this.state.locations;
-  	const Markers = Object.keys(locations).map(key => 
+  	const Markers = Object.keys(locations).map(key =>
   		<Marker
-        onClick={() => { this.onMarkerClick(locations[key].route)}}
-        position={{lat: locations[key].lat, lng: locations[key].lng}}
-        name={locations[key].name}
-			/>
+	        onClick={() => { this.onMarkerClick(locations[key].route)}}
+	        position={{lat: locations[key].lat, lng: locations[key].lng}}
+	        name={locations[key].name}
+	        key={locations[key].name}
+		/>
   	)
 
     return (
@@ -76,7 +77,8 @@ export class MapContainer extends Component {
         style={{
           position: "relative",
           height: "calc(100vh - 200px)",
-          width: "100%"
+          width: "100%",
+          margin: "20px auto"
         }}
       >
         <Map google={this.props.google} zoom={8} initialCenter={{lat: this.state.locations.portjervis.lat, lng: this.state.locations.portjervis.lng}}>

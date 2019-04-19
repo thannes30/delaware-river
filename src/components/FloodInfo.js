@@ -5,12 +5,10 @@ class FloodInfo extends Component {
 
 	render() {
 
-		// console.log(this.props.floodInfo);
-
 		return (
-			<div>
+			<div className='flood-zones'>
 				<h4>Flood Zones</h4>
-				<List listObject={this.props.floodInfo} />
+				<List key={this.props.floodInfo.action} listObject={this.props.floodInfo} />
 			</div>
 		)
 	}

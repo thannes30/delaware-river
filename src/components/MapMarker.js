@@ -5,18 +5,13 @@ class MapMarker extends Component {
 
   renderTheRedirect = (route) => {
     console.log(route);
-    // if (route) {
-    //  return <Redirect to={route} />
-    // }
   }
 
   render() {
     const locations = this.props.locations;
-    // console.log(locations.portjervis.lat);
-    // console.log(locations.portjervis.lng);
 
     return (
-      <div 
+      <div
         className="marker"
         key={locations.portjervis.lat}
         onClick={this.renderTheRedirect(locations.portjervis.route)}
