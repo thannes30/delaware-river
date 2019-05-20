@@ -4,7 +4,8 @@ import BarChart from './BarChart'
 import Title from './Title'
 import FloodInfo from './FloodInfo'
 import * as XML_URLs from '../constants'
-import {formatDate} from '../lib/utils'
+// import {formatDate} from '../lib/utils'
+import dateFormat from 'dateformat'
 import xml2js from 'xml2js'
 import { Link } from 'react-router-dom'
 
@@ -33,7 +34,8 @@ class RiverConditions extends Component {
     let observedLen = data.site.observed[0].datum.length;
     for (let i = 0; i < observedLen; i++) {
       var obj = {};
-      obj['date'] = formatDate(data.site.observed[0].datum[i].valid[0]['_']);
+      // obj['date'] = formatDate(data.site.observed[0].datum[i].valid[0]['_']);
+      obj['date'] = dateFormat(data.site.observed[0].datum[i].valid[0]['_'], "dddd, mmmm dS, yyyy, h:MM:ss TT");
       obj['waterHeight'] = data.site.observed[0].datum[i].primary[0]['_'];
       obj['flowSpeed'] = data.site.observed[0].datum[i].secondary[0]['_'];
       newChartData.push(obj);
@@ -50,7 +52,7 @@ class RiverConditions extends Component {
 
     newChartData.reverse();
 
-    console.log(newChartData);
+    // console.log(newChartData);
 
     this.setState({
       title: data.site.$.name,
@@ -91,12 +93,12 @@ class RiverConditions extends Component {
   }
 
   _getData = (url) => {
-    console.log(url);
+    // console.log(url);
     var self = this;
     fetch(url).then(response => {
       response.text().then(xmlText => {
         xml2js.parseString(xmlText, function (err, result) {
-          console.log(result);
+          // console.log(result);
           self._applyData(result);
         });
       });
@@ -106,7 +108,6 @@ class RiverConditions extends Component {
   componentDidUpdate(prev) {
     console.log('componentDidUpdate');
     const newLocation = this.props.match.params.place;
-    // console.log(newLocation);
 
     if (newLocation === undefined || newLocation === prev.match.params.place) {
       return false;
@@ -118,15 +119,19 @@ class RiverConditions extends Component {
       // console.log(locationURL);
       this._getData(locationURL);
     }
+
+    console.log(newLocation)
+    this.setState({ location: newLocation });
+
   }
 
   componentDidMount() {
     console.log('componentDidMount');
-    console.log('>> props', this.props);
     const location = this.props.match.params.place;
     this.setState({ location: location });
+    console.log(location);
     const locationURL = XML_URLs[location];
-    console.log(locationURL);
+    // console.log(locationURL);
     this._getData(locationURL);
   }
 

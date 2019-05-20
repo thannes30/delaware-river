@@ -4,7 +4,7 @@ class List extends Component {
 
 	render() {
 
-		console.log(this.props.listObject);
+		// console.log(this.props.listObject);
 
 		const listObject = this.props.listObject;
 
