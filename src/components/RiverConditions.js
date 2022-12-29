@@ -4,7 +4,6 @@ import BarChart from './BarChart'
 import Title from './Title'
 import FloodInfo from './FloodInfo'
 import * as XML_URLs from '../constants'
-// import {formatDate} from '../lib/utils'
 import dateFormat from 'dateformat'
 import xml2js from 'xml2js'
 import { Link } from 'react-router-dom'
@@ -28,31 +27,20 @@ class RiverConditions extends Component {
   }
 
   _applyData = (result) => {
+    console.log("result ", result)
     let data = result;
     let newChartData = [];
 
     let observedLen = data.site.observed[0].datum.length;
     for (let i = 0; i < observedLen; i++) {
       var obj = {};
-      // obj['date'] = formatDate(data.site.observed[0].datum[i].valid[0]['_']);
       obj['date'] = dateFormat(data.site.observed[0].datum[i].valid[0]['_'], "dddd, mmmm dS, yyyy, h:MM:ss TT");
       obj['waterHeight'] = data.site.observed[0].datum[i].primary[0]['_'];
       obj['flowSpeed'] = data.site.observed[0].datum[i].secondary[0]['_'];
       newChartData.push(obj);
     }
 
-    // let forecastLen = data.site.forecast[0].datum.length;
-    // for (let j = 0; j < forecastLen; j++) {
-    //   var obj = {};
-    //   obj['date'] = formatDate(data.site.observed[0].datum[j].valid[0]['_']);
-    //   obj['waterHeight'] = data.site.observed[0].datum[j].primary[0]['_'];
-    //   obj['flowSpeed'] = data.site.observed[0].datum[j].secondary[0]['_'];
-    //   newChartData.push(obj);
-    // }
-
     newChartData.reverse();
-
-    // console.log(newChartData);
 
     this.setState({
       title: data.site.$.name,
@@ -93,12 +81,11 @@ class RiverConditions extends Component {
   }
 
   _getData = (url) => {
-    // console.log(url);
     var self = this;
     fetch(url).then(response => {
       response.text().then(xmlText => {
         xml2js.parseString(xmlText, function (err, result) {
-          // console.log(result);
+          console.log(result);
           self._applyData(result);
         });
       });
@@ -114,9 +101,7 @@ class RiverConditions extends Component {
     }
 
     if (newLocation !== this.state.location) {
-      // console.log(newLocation + ' !== ' + this.state.location);
       const locationURL = XML_URLs[newLocation];
-      // console.log(locationURL);
       this._getData(locationURL);
     }
 
@@ -131,7 +116,6 @@ class RiverConditions extends Component {
     this.setState({ location: location });
     console.log(location);
     const locationURL = XML_URLs[location];
-    // console.log(locationURL);
     this._getData(locationURL);
   }
 
