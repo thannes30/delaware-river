@@ -11,7 +11,16 @@ export default function Footer() {
         >
           Tim Hannes
         </a>
-        . Data from NOAA NWPS.
+        . Data from{' '}
+        <a
+          href="https://water.noaa.gov/"
+          target="_blank"
+          rel="noreferrer noopener"
+          className="text-river underline-offset-2 hover:underline"
+        >
+          NOAA NWPS
+        </a>
+        .
       </p>
     </footer>
   );
