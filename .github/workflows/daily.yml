@@ -1,0 +1,22 @@
+name: Save daily river readings
+
+on:
+  schedule:
+    # 08:00 UTC is 3-4am US Eastern, after the previous local day has fully closed
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  save:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run daily
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
